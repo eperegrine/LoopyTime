@@ -77,10 +77,10 @@ public class Pickup : MonoBehaviour {
 		Debug.DrawRay (transform.position, -transform.up * CheckDistance, leftCheck ? Color.red : Color.green);
 
 		if (rightCheck)
-			OnDetectPass.Invoke (false);
+			OnDetectPass.Invoke (rightCheck);
 
 		if (leftCheck)
-			OnDetectPass.Invoke (true);
+			OnDetectPass.Invoke (leftCheck);
 	}
 
 	public void OnCollisionEnter2D (Collision2D coll) {
@@ -88,12 +88,7 @@ public class Pickup : MonoBehaviour {
 		Debug.Log ("Hi");
 	}
 		
-	public Action<bool> OnDetectPass = (bool left) => {
-		
-		if (left) {
-			//Debug.Log("Detected a passer by on Left");
-		} else {
-			//Debug.Log("Detected a passer by on Right");
-		}
+	public Action<RaycastHit2D> OnDetectPass = (RaycastHit2D coll) => {
+		//DoStuff
 	};
 }

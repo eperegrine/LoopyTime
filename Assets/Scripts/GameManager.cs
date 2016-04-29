@@ -43,8 +43,11 @@ public class GameManager : MonoBehaviour {
 			Destroy (this.gameObject);
 		}
 		
-		GamePickup.OnDetectPass = (bool left) => {
-			Debug.Log("Passed");
+		GamePickup.OnDetectPass = (RaycastHit2D hit) => {
+			PlayerControl player = hit.transform.gameObject.GetComponent<PlayerControl>();
+			if (player._currentRing != GamePickup._currentRing) {
+				Debug.Log("Passed");	
+			}
 		};
 	}
 
