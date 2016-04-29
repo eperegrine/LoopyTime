@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour {
 	public PlayerControl Player;
 	public Spin MainSpinner;
 	public SpinSpeeds Speeds = new SpinSpeeds(180, 90, 45);
+	public Pickup GamePickup;
 
 	public static GameManager _instance;
 
@@ -36,6 +37,15 @@ public class GameManager : MonoBehaviour {
 			Debug.LogError ("Main Spinner is not assigned in the game manager, destroying...");
 			Destroy (this.gameObject);
 		}
+		
+		if (GamePickup == null) {
+			Debug.LogError ("Game Pickup is not assigned in the game manager, destroying...");
+			Destroy (this.gameObject);
+		}
+		
+		GamePickup.OnDetectPass = (bool left) => {
+			Debug.Log("Passed");
+		};
 	}
 
 	void Update () {
