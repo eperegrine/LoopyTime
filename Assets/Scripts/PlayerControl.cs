@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 public class PlayerControl : MonoBehaviour {
-
 	public float InnerValue = 0.5f;
 	public float MiddleValue = 1f;
 	public float OuterValue = 1.5f;

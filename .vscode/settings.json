@@ -51,7 +51,10 @@
 		"library/":true,
 		"obj/":true,
 		"Obj/":true,
-		"ProjectSettings/":true,		"temp/":true,
+		"ProjectSettings/":true,
+		"temp/":true,
 		"Temp/":true
-	}
+	},
+	"editor.tabSize": 2,
+	"editor.insertSpaces": true
 }
