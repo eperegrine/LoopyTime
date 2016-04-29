@@ -28,14 +28,31 @@ public class Pickup : MonoBehaviour {
 	}
 
 	void UpdatePos() {
-		float changeAmount = 45; 
-		transform.rotation = Quaternion.Euler(0, 0, GameManager._instance.MainSpinner.transform.localEulerAngles.z + changeAmount);
+		int angle = UnityEngine.Random.Range(0, 365);
+		transform.rotation = Quaternion.Euler(0, 0, GameManager._instance.MainSpinner.transform.localEulerAngles.z + angle);
+		
+		int ringTypeRandom = UnityEngine.Random.Range(0, 3);
+		RingType newRing = _currentRing;
+		switch (ringTypeRandom)
+		{
+			case 0:
+				newRing = RingType.Inner;
+				break;
+			case 1:
+				newRing = RingType.Middle;
+				break;
+			case 2:
+				newRing = RingType.Outer;
+				break;
+			default:
+				newRing = RingType.Inner;
+				break;
+		}
+		
+		_currentRing = newRing;
 	}
 
 	void FixedUpdate () {
-
-		float distCovered = (Time.time - startTime) * ChangeSpeed;
-
 		switch (_currentRing) {
 		case RingType.Inner:
 			yVal = InnerValue;
