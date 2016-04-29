@@ -63,31 +63,33 @@ public class PlayerControl : MonoBehaviour {
 	float yVal;
 
 	void FixedUpdate () {
-		float distCovered = (Time.time - startTime) * ChangeSpeed;
-		float fracJourney = 0;
+		if (GameManager.hasStarted) {
+			float distCovered = (Time.time - startTime) * ChangeSpeed;
+			float fracJourney = 0;
 
-		switch (_currentRing) {
-		case RingType.Inner:
-			journeyLength = Mathf.Abs(InnerValue - yVal);
-			fracJourney = distCovered / journeyLength;
-			yVal = Mathf.Lerp(yVal, InnerValue, fracJourney);
-			break;
-		case RingType.Middle:
-			journeyLength = Mathf.Abs(MiddleValue - yVal);
-			fracJourney = distCovered / journeyLength;
-			yVal = Mathf.Lerp(yVal, MiddleValue, fracJourney);
-			break;
-		case RingType.Outer:
-			journeyLength = Mathf.Abs(OuterValue - yVal);
-			fracJourney = distCovered / journeyLength;
-			yVal = Mathf.Lerp(yVal, OuterValue, fracJourney);
-			break;
-		default:
-			Debug.LogError ("Error, Ring Type unknown");
-			break;
+			switch (_currentRing) {
+			case RingType.Inner:
+				journeyLength = Mathf.Abs(InnerValue - yVal);
+				fracJourney = distCovered / journeyLength;
+				yVal = Mathf.Lerp(yVal, InnerValue, fracJourney);
+				break;
+			case RingType.Middle:
+				journeyLength = Mathf.Abs(MiddleValue - yVal);
+				fracJourney = distCovered / journeyLength;
+				yVal = Mathf.Lerp(yVal, MiddleValue, fracJourney);
+				break;
+			case RingType.Outer:
+				journeyLength = Mathf.Abs(OuterValue - yVal);
+				fracJourney = distCovered / journeyLength;
+				yVal = Mathf.Lerp(yVal, OuterValue, fracJourney);
+				break;
+			default:
+				Debug.LogError ("Error, Ring Type unknown");
+				break;
+			}
+
+			transform.position = transform.up * yVal;
 		}
-
-		transform.position = transform.up * yVal;
 	}
 }
 

@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
 	public PlayerControl Player;
 	public Spin MainSpinner;
-	public SpinSpeeds Speeds = new SpinSpeeds(180, 90, 45);
+	public SpinSpeeds Speeds = new SpinSpeeds(180, 180, 180);
 	public Pickup GamePickup;
+	
+	public static bool hasStarted = false;
 
 	public static GameManager _instance;
 
@@ -46,26 +49,35 @@ public class GameManager : MonoBehaviour {
 		GamePickup.OnDetectPass = (RaycastHit2D hit) => {
 			PlayerControl player = hit.transform.gameObject.GetComponent<PlayerControl>();
 			if (player._currentRing != GamePickup._currentRing) {
-				Debug.Log("Passed");	
+				hasStarted = false;
+				SceneManager.LoadScene(0, LoadSceneMode.Single);
 			}
 		};
 	}
 
 	void Update () {
-		switch (Player._currentRing) {
-		case RingType.Inner:
-			MainSpinner.Speed = Speeds.InnerSpeed;
-			break;
-		case RingType.Middle:
-			MainSpinner.Speed = Speeds.MiddleSpeed;
-			break;
-		case RingType.Outer:
-			MainSpinner.Speed = Speeds.OuterSpeed;
-			break;
-		default:
-			Debug.LogError ("Error, Ring Type unknown");
-			break;
+		if (hasStarted) {
+			switch (Player._currentRing) {
+				case RingType.Inner:
+					MainSpinner.Speed = Speeds.InnerSpeed;
+					break;
+				case RingType.Middle:
+					MainSpinner.Speed = Speeds.MiddleSpeed;
+					break;
+				case RingType.Outer:
+					MainSpinner.Speed = Speeds.OuterSpeed;
+					break;
+				default:
+					Debug.LogError ("Error, Ring Type unknown");
+					break;
+			}
+		} 
+		else {
+			if (Input.GetKeyDown(KeyCode.Space)) {
+				hasStarted = true;
+			}
 		}
+		
 	}
 }
 

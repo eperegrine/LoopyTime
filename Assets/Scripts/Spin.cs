@@ -5,8 +5,10 @@ public class Spin : MonoBehaviour {
 	public float Speed = 180;
 
 	void FixedUpdate () {
-		Vector3 currentRot = transform.eulerAngles;
-		float RotateAmount = Speed * Time.fixedDeltaTime;
-		transform.rotation = Quaternion.Euler (currentRot.x, currentRot.y, currentRot.z + RotateAmount);
+		if (GameManager.hasStarted) {
+			Vector3 currentRot = transform.eulerAngles;
+			float RotateAmount = Speed * Time.fixedDeltaTime;
+			transform.rotation = Quaternion.Euler (currentRot.x, currentRot.y, currentRot.z + RotateAmount);
+		}
 	}
 }
