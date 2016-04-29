@@ -63,7 +63,7 @@ public class PlayerControl : MonoBehaviour {
 	float yVal;
 
 	void FixedUpdate () {
-		if (GameManager.hasStarted) {
+		if (GameManager.isPlaying) {
 			float distCovered = (Time.time - startTime) * ChangeSpeed;
 			float fracJourney = 0;
 

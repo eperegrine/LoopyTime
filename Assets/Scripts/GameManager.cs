@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
@@ -7,8 +8,13 @@ public class GameManager : MonoBehaviour {
 	public Spin MainSpinner;
 	public SpinSpeeds Speeds = new SpinSpeeds(180, 180, 180);
 	public Pickup GamePickup;
-	
-	public static bool hasStarted = false;
+
+	public GameObject PausePanel;
+	public Button PauseButton;
+	public Button MoveUpButton;
+	public Button MoveDownButton;
+
+	public static bool isPlaying = false;
 
 	public static GameManager _instance;
 
@@ -45,18 +51,40 @@ public class GameManager : MonoBehaviour {
 			Debug.LogError ("Game Pickup is not assigned in the game manager, destroying...");
 			Destroy (this.gameObject);
 		}
+
+		if (PausePanel == null) {
+			Debug.LogError ("PausePanel is not assigned in the game manager, destroying...");
+			Destroy (this.gameObject);
+		}
+
+		if (PauseButton == null) {
+			Debug.LogError ("PausePanel is not assigned in the game manager, destroying...");
+			Destroy (this.gameObject);
+		}
+
+		if (MoveUpButton == null) {
+			Debug.LogError ("PausePanel is not assigned in the game manager, destroying...");
+			Destroy (this.gameObject);
+		}
+
+		if (MoveDownButton == null) {
+			Debug.LogError ("PausePanel is not assigned in the game manager, destroying...");
+			Destroy (this.gameObject);
+		}
 		
 		GamePickup.OnDetectPass = (RaycastHit2D hit) => {
 			PlayerControl player = hit.transform.gameObject.GetComponent<PlayerControl>();
 			if (player._currentRing != GamePickup._currentRing) {
-				hasStarted = false;
+				isPlaying = false;
 				SceneManager.LoadScene(0, LoadSceneMode.Single);
 			}
 		};
 	}
 
 	void Update () {
-		if (hasStarted) {
+		PausePanel.SetActive (!isPlaying);
+
+		if (isPlaying) {
 			switch (Player._currentRing) {
 				case RingType.Inner:
 					MainSpinner.Speed = Speeds.InnerSpeed;
@@ -74,10 +102,18 @@ public class GameManager : MonoBehaviour {
 		} 
 		else {
 			if (Input.GetKeyDown(KeyCode.Space)) {
-				hasStarted = true;
+				isPlaying = true;
 			}
 		}
 		
+	}
+
+	public void BeginGame() {
+		isPlaying = true;
+	}
+
+	public void PauseGame() {
+		isPlaying = false;
 	}
 }
 
