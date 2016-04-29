@@ -10,9 +10,7 @@ public class GameManager : MonoBehaviour {
 	public Pickup GamePickup;
 
 	public GameObject PausePanel;
-	public Button PauseButton;
-	public Button MoveUpButton;
-	public Button MoveDownButton;
+	public GameObject ControlPanel;
 
 	public static bool isPlaying = false;
 
@@ -57,20 +55,11 @@ public class GameManager : MonoBehaviour {
 			Destroy (this.gameObject);
 		}
 
-		if (PauseButton == null) {
-			Debug.LogError ("PausePanel is not assigned in the game manager, destroying...");
+		if (ControlPanel == null) {
+			Debug.LogError ("Control Panel is not assigned in the game manager, destroying...");
 			Destroy (this.gameObject);
 		}
 
-		if (MoveUpButton == null) {
-			Debug.LogError ("PausePanel is not assigned in the game manager, destroying...");
-			Destroy (this.gameObject);
-		}
-
-		if (MoveDownButton == null) {
-			Debug.LogError ("PausePanel is not assigned in the game manager, destroying...");
-			Destroy (this.gameObject);
-		}
 		
 		GamePickup.OnDetectPass = (RaycastHit2D hit) => {
 			PlayerControl player = hit.transform.gameObject.GetComponent<PlayerControl>();
@@ -83,6 +72,7 @@ public class GameManager : MonoBehaviour {
 
 	void Update () {
 		PausePanel.SetActive (!isPlaying);
+		ControlPanel.SetActive (isPlaying);
 
 		if (isPlaying) {
 			switch (Player._currentRing) {

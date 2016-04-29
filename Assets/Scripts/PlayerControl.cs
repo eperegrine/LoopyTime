@@ -22,41 +22,51 @@ public class PlayerControl : MonoBehaviour {
 		startTime = Time.time;
 	}
 
+	public void MoveUp ()
+	{
+		startTime = Time.time;
+		switch (_currentRing) {
+		case RingType.Inner:
+			_currentRing = RingType.Middle;
+			break;
+		case RingType.Middle:
+			_currentRing = RingType.Outer;
+			break;
+		case RingType.Outer:
+			_currentRing = RingType.Inner;
+			break;
+		default:
+			Debug.LogError ("Error, Ring Type unknown");
+			break;
+		}
+	}
+
+	public void MoveDown ()
+	{
+		startTime = Time.time;
+		switch (_currentRing) {
+		case RingType.Inner:
+			_currentRing = RingType.Outer;
+			break;
+		case RingType.Middle:
+			_currentRing = RingType.Inner;
+			break;
+		case RingType.Outer:
+			_currentRing = RingType.Middle;
+			break;
+		default:
+			Debug.LogError ("Error, Ring Type unknown");
+			break;
+		}
+	}
+
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.UpArrow)) {
-			startTime = Time.time;
-			switch (_currentRing) {
-			case RingType.Inner:
-				_currentRing = RingType.Middle;
-				break;
-			case RingType.Middle:
-				_currentRing = RingType.Outer;
-				break;
-			case RingType.Outer:
-				_currentRing = RingType.Inner;
-				break;
-			default:
-				Debug.LogError ("Error, Ring Type unknown");
-				break;
-			}
+			MoveUp ();
 		}
 
 		if (Input.GetKeyDown(KeyCode.DownArrow)) {
-			startTime = Time.time;
-			switch (_currentRing) {
-			case RingType.Inner:
-				_currentRing = RingType.Outer;
-				break;
-			case RingType.Middle:
-				_currentRing = RingType.Inner;
-				break;
-			case RingType.Outer:
-				_currentRing = RingType.Middle;
-				break;
-			default:
-				Debug.LogError ("Error, Ring Type unknown");
-				break;
-			}
+			MoveDown ();
 		}
 	}
 
