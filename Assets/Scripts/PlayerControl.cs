@@ -5,6 +5,10 @@ public class PlayerControl : MonoBehaviour {
 	public float MiddleValue = 1f;
 	public float OuterValue = 1.5f;
 
+	public AudioClip MoveUpClip;
+	public AudioClip MoveDownClip;
+	AudioSource _source;
+
 	public float ChangeSpeed = 2f;
 
 	public RingType StartingRing = RingType.Inner;
@@ -19,11 +23,14 @@ public class PlayerControl : MonoBehaviour {
 
 	void Start() {
 		_currentRing = StartingRing;
+		_source = GetComponent<AudioSource> ();
 		startTime = Time.time;
 	}
 
 	public void MoveUp ()
 	{
+		_source.PlayOneShot (MoveUpClip);
+
 		startTime = Time.time;
 		switch (_currentRing) {
 		case RingType.Inner:
@@ -43,6 +50,8 @@ public class PlayerControl : MonoBehaviour {
 
 	public void MoveDown ()
 	{
+		_source.PlayOneShot (MoveDownClip);
+
 		startTime = Time.time;
 		switch (_currentRing) {
 		case RingType.Inner:

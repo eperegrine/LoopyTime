@@ -11,6 +11,9 @@ public class Pickup : MonoBehaviour {
 	public float CheckDistance = .5f;
 	public float ChangeSpeed = 2f;
 
+	public AudioClip OnPickupClip;
+	AudioSource _source;
+
 	public LayerMask WhatIsPlayer;
 
 	[HideInInspector]
@@ -24,6 +27,7 @@ public class Pickup : MonoBehaviour {
 	float fracJourney;
 
 	void Awake () {
+		_source = GetComponent<AudioSource> ();
 		UpdatePos();
 	}
 
@@ -86,6 +90,7 @@ public class Pickup : MonoBehaviour {
 	public void OnCollisionEnter2D (Collision2D coll) {
 		UpdatePos ();
 		GameManager._instance.AddToScore ();
+		_source.PlayOneShot (OnPickupClip);
 	}
 		
 	public Action<RaycastHit2D> OnDetectPass = (RaycastHit2D coll) => {
