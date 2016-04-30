@@ -16,8 +16,14 @@ public class GameManager : MonoBehaviour {
 
 	public Text ScoreDisplay;
 	public string ScoreDisplayMessage = "Score: {0}\nHighScore: {1}";
+	public Text HighscoreDisplay;
+	public string HighScoreMessage = "Highscore: {0}";
+	public Text EndGameDisplay;
+	public string EndGameMessage = "You Scored {0}!\nTap to Play Again";
 	int currentScore = 0;
 	int highscore = 10;
+
+	bool hasPlayedThisSession;
 
 	public static bool isPlaying = false;
 
@@ -67,6 +73,21 @@ public class GameManager : MonoBehaviour {
 			Destroy (this.gameObject);
 		}
 
+		if (ScoreDisplay == null) {
+			Debug.LogError ("Score Display is not assigned in the game manager, destroying...");
+			Destroy (this.gameObject);
+		}
+
+		if (HighscoreDisplay == null) {
+			Debug.LogError ("Highscore Display is not assigned in the game manager, destroying...");
+			Destroy (this.gameObject);
+		}
+
+		if (EndGameDisplay == null) {
+			Debug.LogError ("Highscore Display is not assigned in the game manager, destroying...");
+			Destroy (this.gameObject);
+		}
+
 		highscore = PlayerPrefs.GetInt ("HS");
 
 		
@@ -78,7 +99,8 @@ public class GameManager : MonoBehaviour {
 					highscore = currentScore;
 					PlayerPrefs.SetInt("HS", highscore);
 				}
-				SceneManager.LoadScene(0, LoadSceneMode.Single);
+				hasPlayedThisSession = true;
+				MainSpinner.transform.rotation = Quaternion.identity;
 			}
 		};
 	}
@@ -132,8 +154,11 @@ public class GameManager : MonoBehaviour {
 		PausePanel.SetActive (!isPlaying);
 		ControlPanel.SetActive (isPlaying);
 		ScoreDisplay.gameObject.SetActive (isPlaying);
+		EndGameDisplay.gameObject.SetActive (!isPlaying && hasPlayedThisSession);
 
+		HighscoreDisplay.text = string.Format (HighScoreMessage, highscore); 
 		ScoreDisplay.text = string.Format (ScoreDisplayMessage, currentScore, highscore);
+		EndGameDisplay.text = string.Format (EndGameMessage, currentScore);
 	}
 }
 
