@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
+	public bool GodMode = false;
+
 	public PlayerControl Player;
 	public Spin MainSpinner;
 	public SpinSpeeds Speeds = new SpinSpeeds(180, 180, 180);
@@ -11,6 +13,11 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject PausePanel;
 	public GameObject ControlPanel;
+
+	public Text ScoreDisplay;
+	public string ScoreDisplayMessage = "Score: {0}\nHighScore: {1}";
+	int currentScore = 0;
+	int highscore = 10;
 
 	public static bool isPlaying = false;
 
@@ -60,19 +67,26 @@ public class GameManager : MonoBehaviour {
 			Destroy (this.gameObject);
 		}
 
+		highscore = PlayerPrefs.GetInt ("HS");
+
 		
 		GamePickup.OnDetectPass = (RaycastHit2D hit) => {
 			PlayerControl player = hit.transform.gameObject.GetComponent<PlayerControl>();
-			if (player._currentRing != GamePickup._currentRing) {
+			if (player._currentRing != GamePickup._currentRing && !GodMode) {
 				isPlaying = false;
+				if (currentScore > highscore) {
+					highscore = currentScore;
+					PlayerPrefs.SetInt("HS", highscore);
+				}
 				SceneManager.LoadScene(0, LoadSceneMode.Single);
 			}
 		};
 	}
 
+	bool touchHandled;
+
 	void Update () {
-		PausePanel.SetActive (!isPlaying);
-		ControlPanel.SetActive (isPlaying);
+		UpdateUI ();
 
 		if (isPlaying) {
 			switch (Player._currentRing) {
@@ -98,12 +112,28 @@ public class GameManager : MonoBehaviour {
 		
 	}
 
+	void OnDrawGUI () {
+		GUI.Label (new Rect (new Vector2 (10, 10), new Vector2 (250, 50)), Input.touchCount.ToString());
+	}
+
+	public void AddToScore() {
+		currentScore++;
+	}
+
 	public void BeginGame() {
 		isPlaying = true;
 	}
 
 	public void PauseGame() {
 		isPlaying = false;
+	}
+
+	public void UpdateUI () {
+		PausePanel.SetActive (!isPlaying);
+		ControlPanel.SetActive (isPlaying);
+		ScoreDisplay.gameObject.SetActive (isPlaying);
+
+		ScoreDisplay.text = string.Format (ScoreDisplayMessage, currentScore, highscore);
 	}
 }
 

@@ -85,7 +85,7 @@ public class Pickup : MonoBehaviour {
 
 	public void OnCollisionEnter2D (Collision2D coll) {
 		UpdatePos ();
-		Debug.Log ("Hi");
+		GameManager._instance.AddToScore ();
 	}
 		
 	public Action<RaycastHit2D> OnDetectPass = (RaycastHit2D coll) => {
