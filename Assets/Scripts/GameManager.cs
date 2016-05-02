@@ -1,8 +1,15 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Advertisements;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour {
+
+	#if UNITY_ADS // If the Ads service is enabled...
+	public int GamesTillAdIsShown = 1;
+	int gameCount = 0;
+	#endif
 
 	public bool GodMode = false;
 
@@ -22,10 +29,12 @@ public class GameManager : MonoBehaviour {
 	public string EndGameMessage = "You Scored {0}!\nTap to Play Again";
 	int currentScore = 0;
 	int highscore = 10;
+	int lastScore = 0;
 
 	bool hasPlayedThisSession;
 
 	public static bool isPlaying = false;
+	private static bool isCurrentGameBeingPlayed = false;
 
 	public static GameManager _instance;
 
@@ -90,6 +99,9 @@ public class GameManager : MonoBehaviour {
 
 		highscore = PlayerPrefs.GetInt ("HS");
 
+		#if !UNITY_EDITOR
+		GodMode = false;
+		#endif
 		
 		GamePickup.OnDetectPass = (RaycastHit2D hit) => {
 			PlayerControl player = hit.transform.gameObject.GetComponent<PlayerControl>();
@@ -99,8 +111,20 @@ public class GameManager : MonoBehaviour {
 					highscore = currentScore;
 					PlayerPrefs.SetInt("HS", highscore);
 				}
+				isCurrentGameBeingPlayed = false;
 				hasPlayedThisSession = true;
+				lastScore = currentScore;
+				currentScore = 0;
 				MainSpinner.transform.rotation = Quaternion.identity;
+				GamePickup.UpdatePos();
+
+				#if UNITY_ADS
+				gameCount++;
+				if (GamesTillAdIsShown == gameCount) {
+					ShowAd();
+					gameCount = 0;
+				}
+				#endif
 			}
 		};
 	}
@@ -128,7 +152,7 @@ public class GameManager : MonoBehaviour {
 		} 
 		else {
 			if (Input.GetKeyDown(KeyCode.Space)) {
-				isPlaying = true;
+				BeginGame ();
 			}
 		}
 		
@@ -143,6 +167,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void BeginGame() {
+		isCurrentGameBeingPlayed = true;
 		isPlaying = true;
 	}
 
@@ -154,11 +179,29 @@ public class GameManager : MonoBehaviour {
 		PausePanel.SetActive (!isPlaying);
 		ControlPanel.SetActive (isPlaying);
 		ScoreDisplay.gameObject.SetActive (isPlaying);
-		EndGameDisplay.gameObject.SetActive (!isPlaying && hasPlayedThisSession);
+		EndGameDisplay.gameObject.SetActive (!isPlaying && hasPlayedThisSession && !isCurrentGameBeingPlayed);
 
 		HighscoreDisplay.text = string.Format (HighScoreMessage, highscore); 
 		ScoreDisplay.text = string.Format (ScoreDisplayMessage, currentScore, highscore);
-		EndGameDisplay.text = string.Format (EndGameMessage, currentScore);
+		EndGameDisplay.text = string.Format (EndGameMessage, lastScore);
+	}
+
+	public void ShowAd()
+	{
+		Debug.Log (Advertisement.IsReady("video"));
+		if (Advertisement.IsReady("video"))
+		{
+			Advertisement.Show("video", new ShowOptions{
+				resultCallback = ((ShowResult obj) => {
+					Invoke("PauseGameAfterAd", 0.001f);
+				})
+			});
+		}
+	}
+
+	void PauseGameAfterAd() {
+		isCurrentGameBeingPlayed = false;
+		PauseGame();
 	}
 }
 

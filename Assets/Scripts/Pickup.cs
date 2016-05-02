@@ -31,7 +31,7 @@ public class Pickup : MonoBehaviour {
 		UpdatePos();
 	}
 
-	void UpdatePos() {
+	public void UpdatePos() {
 		int angle = UnityEngine.Random.Range(90, 340);
 		transform.rotation = Quaternion.Euler(0, 0, GameManager._instance.MainSpinner.transform.localEulerAngles.z + angle);
 		
