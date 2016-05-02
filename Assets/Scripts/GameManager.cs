@@ -7,6 +7,7 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
 	#if UNITY_ADS // If the Ads service is enabled...
+	public bool ShowAds = true;
 	public int GamesTillAdIsShown = 1;
 	int gameCount = 0;
 	#endif
@@ -188,8 +189,7 @@ public class GameManager : MonoBehaviour {
 
 	public void ShowAd()
 	{
-		Debug.Log (Advertisement.IsReady("video"));
-		if (Advertisement.IsReady("video"))
+		if (ShowAds && Advertisement.IsReady("video"))
 		{
 			Advertisement.Show("video", new ShowOptions{
 				resultCallback = ((ShowResult obj) => {
