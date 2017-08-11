@@ -189,6 +189,7 @@ public class GameManager : MonoBehaviour {
 
 	public void ShowAd()
 	{
+		#if UNITY_ADS
 		if (ShowAds && Advertisement.IsReady("video"))
 		{
 			Advertisement.Show("video", new ShowOptions{
@@ -197,6 +198,7 @@ public class GameManager : MonoBehaviour {
 				})
 			});
 		}
+		#endif
 	}
 
 	void PauseGameAfterAd() {
